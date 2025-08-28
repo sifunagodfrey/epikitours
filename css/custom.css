@@ -1,0 +1,744 @@
+/* ================================
+   Hospanet Custom CSS
+   By Sifuna Godfrey
+================================ */
+
+/* ===== Import Lato Font ===== */
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+
+/* ===== Color Palette ===== */
+:root {
+    --primary-color: #3c79bc;
+    --secondary-color: #f19583;
+    --tertiary-color: #E0F7FA;
+    --white-color: #ffffff;
+    --black-color: #000000;
+    --pale-grey: #f6f6f6;
+    --dark-grey: #333333;
+}
+
+/* ===== Body Styling ===== */
+body {
+    font-family: 'Helvetica', sans-serif;
+    background-color: var(--pale-grey);
+    color: var(--black-color);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+/* ================================
+   JD Party Header Styling
+================================ */
+
+/* ===== Top Bar ===== */
+.top-bar {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    padding: 8px 0;
+}
+
+.top-bar a {
+    color: var(--pale-grey);
+    font-size: 14px;
+    font-weight: 400;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.top-bar a:hover {
+    color: var(--primary-color);
+}
+
+.top-bar .btn {
+    background-color: var(--white-color);
+    color: var(--primary-color);
+    font-weight: bold;
+    border: none;
+    padding: 5px 12px;
+    transition: background-color 0.3s ease;
+}
+
+.top-bar .btn:hover {
+    background-color: var(--secondary-color);
+    color: var(--white-color);
+}
+
+/* ================================
+   Default Color
+================================ */
+.bg-primary {
+    background-color: var(--primary-color) !important;
+}
+
+.bg-secondary {
+    background-color: var(--secondary-color) !important;
+}
+
+.text-danger {
+    color: var(--primary-color) !important;
+}
+
+/* ===== Navbar ===== */
+.navbar {
+    background-color: #ffffff;
+    padding: 12px 0;
+    transition: all 0.3s ease;
+    border-bottom: 2px solid #e9ecef;
+}
+
+/* ===== Navbar Links ===== */
+.navbar-nav .nav-link {
+    color: #151d30;
+    padding: 12px 20px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link.active {
+    color: #89073c;
+}
+
+.active-sidebar {
+    background-color: var(--primary-color) !important;
+    color: #fff !important;
+    font-weight: 600;
+}
+
+.active-sidebar:hover {
+    background-color: var(--primary-color) !important;
+    color: #fff !important;
+    font-weight: 600;
+}
+
+.active-sidebar i {
+    color: #fff !important;
+}
+
+/* ===== Navbar Shadow on Scroll ===== */
+.navbar.shadow {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== Dropdown Menu ===== */
+.dropdown-menu {
+    border: 1px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.3s ease;
+    margin-top: 0;
+}
+
+.dropdown-item {
+    font-size: 14px;
+    padding: 10px 20px;
+    border-bottom: 1px solid #e9ecef;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.dropdown-item:hover {
+    background-color: #f8f9fa;
+}
+
+/* ===== Dropdown Arrow ===== */
+.dropdown-arrow {
+    font-size: 12px;
+    margin-left: 5px;
+    transition: transform 0.3s ease;
+}
+
+.dropdown-toggle.show .dropdown-arrow {
+    transform: rotate(-180deg);
+}
+
+/* ===== Hover Effect on Desktop Only ===== */
+@media (min-width: 992px) {
+    .dropdown:hover .dropdown-menu {
+        display: block;
+    }
+}
+
+
+/* ================================
+   Button Styling
+================================ */
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 1px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-color);
+    color: var(--white-color);
+}
+
+
+.btn-primary:active {
+    background-color: var(--secondary-color) !important;
+    color: var(--white-color);
+    border-color: var(--secondary-color) !important;
+}
+
+.btn-outline-primary {
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    padding: 10px 20px;
+    border-radius: 1px;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color) !important;
+    color: var(--white-color);
+    border: 2px solid var(--primary-color) !important;
+}
+
+.btn-outline-primary:active {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    border: 2px solid var(--primary-color);
+}
+
+/* ================================
+   Button Secondary
+================================ */
+.btn-secondary {
+    background-color: var(--secondary-color);
+    color: var(--white-color);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 1px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+}
+
+.btn-outline-secondary {
+    border: 2px solid var(--secondary-color);
+    color: var(--secondary-color);
+    padding: 10px 20px;
+    border-radius: 1px;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-secondary:hover {
+    background-color: var(--secondary-color);
+    color: var(--white-color);
+    border: 2px solid var(--secondary-color);
+}
+
+/* ===== Register Button ===== */
+.btn-warning {
+    background-color: var(--secondary-color);
+    color: var(--white-color);
+    font-weight: bold;
+    padding: 8px 20px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-warning:hover {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+}
+
+/* ================================
+   Smooth Scrolling & Section Highlight
+================================ */
+
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* Active link in the navbar */
+.navbar-nav .nav-link.active {
+    font-weight: bold;
+    color: var(--primary-color);
+    position: relative;
+}
+
+.navbar-nav .nav-link.active::after {
+    content: '';
+    width: 100%;
+    height: 2px;
+    background-color: var(--secondary-color);
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+}
+
+/* ================================
+   Responsive Styling
+================================ */
+
+@media (max-width: 768px) {
+    .top-bar .contact-info {
+        display: none;
+    }
+
+    .navbar-nav {
+        margin-top: 10px;
+    }
+
+    .navbar-nav .nav-item {
+        background-color: var(--secondary-color);
+        z-index: 9;
+        color: var(--white-color) !important;
+        padding-bottom: 5px;
+    }
+}
+
+/* ================================
+   Animation
+================================ */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== Fade-in Animation ===== */
+.fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease-in, transform 0.8s ease-in;
+}
+
+.fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ================================
+   HERO SECTION
+================================ */
+.hero {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: url('../images/hero-bg.jpg') no-repeat center center/cover;
+    color: var(--white-color);
+    padding: 20px;
+}
+
+.hero h1 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    opacity: 0;
+    animation: fadeInUp 1s ease-in-out forwards;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    opacity: 0;
+    animation: fadeInUp 1.2s ease-in-out forwards;
+}
+
+.hero .btn {
+    margin-top: 20px;
+    padding: 14px 28px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 1px;
+    transition: all 0.3s ease-in-out;
+}
+
+.hero .btn:hover {
+    transform: translateY(-3px);
+}
+
+/* Hero Overlay */
+.hero::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+/* Responsive Hero Text */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2rem;
+    }
+
+    .hero p {
+        font-size: 1rem;
+    }
+
+    .hero .btn {
+        padding: 12px 24px;
+        font-size: 1rem;
+    }
+}
+
+/* ===== Welcome Section Styling ===== */
+h4 {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+h2 {
+    font-weight: 700;
+    color: var(--black-color);
+}
+
+p {
+    line-height: 1.6;
+}
+
+/* ===== Quote Block Styling ===== */
+.border-primary .fst-italic {
+    font-size: 17px;
+}
+
+.border-start {
+    border-left-width: 4px !important;
+    border-left-style: solid !important;
+}
+
+.border-primary {
+    border-left-color: var(--primary-color) !important;
+}
+
+.text-primary {
+    color: var(--primary-color) !important;
+}
+
+.text-secondary {
+    color: var(--secondary-color);
+}
+
+/* Icon Box Hover Effect */
+.bg-light {
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.bg-light:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== Champion Section Styling ===== */
+.card {
+    transition: transform 0.4s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+.card h5 {
+    color: var(--primary-color);
+}
+
+.card img {
+    transition: filter 0.4s ease-in-out;
+}
+
+.card:hover img {
+    filter: brightness(0.9);
+}
+
+/* Learn More Button */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    transition: background-color 0.3s ease-in-out, transform 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+}
+
+/* ===== Our Party Documents Styling ===== */
+.card-link {
+    text-decoration: none;
+    transition: transform 0.3s ease-in-out;
+}
+
+.card-link:hover {
+    transform: translateY(-5px);
+}
+
+.image-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #89073c;
+    color: var(--white-color);
+    padding: 10px;
+    opacity: 0;
+    transition: opacity 0.4s ease-in-out;
+}
+
+.image-container:hover .overlay {
+    opacity: 1;
+}
+
+/* See Details Button */
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+    transition: background-color 0.3s ease-in-out, color 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+}
+
+/* ===== Manifesto Section Styling ===== */
+.icon {
+    color: var(--primary-color);
+    transition: color 0.3s ease-in-out;
+}
+
+.card:hover .icon {
+    color: var(--secondary-color);
+}
+
+.info-box {
+    background-color: #f8f9fa;
+    /* Light background */
+    color: #151d30;
+    /* Dark text color */
+    border: 1px solid #ddd;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.info-box i {
+    color: #89073c;
+    /* Primary color for icons */
+    transition: transform 0.3s ease;
+}
+
+/* Hover effect */
+.info-box:hover {
+    background-color: #89073c;
+    color: #fff;
+    border-color: #89073c;
+    transform: translateY(-5px);
+}
+
+.info-box:hover i {
+    color: #fff;
+    transform: rotate(360deg);
+}
+
+/* ===== Responsive Styling ===== */
+@media (max-width: 768px) {
+    .carousel-caption {
+        max-width: 80% !important;
+        left: 10% !important;
+    }
+
+    .overlay {
+        font-size: 0.9rem;
+    }
+}
+
+/* ================================
+   JS-Based Style (Dynamic Highlight)
+================================ */
+
+/* Highlight active section */
+section.active {
+    background-color: #f8f9fa;
+    border-left: 5px solid var(--primary-color);
+    padding: 10px;
+    transition: background-color 0.3s ease;
+}
+
+
+
+
+/* ================================
+   Footer Styling
+================================ */
+.custom-footer {
+    background-color: #151d30;
+    color: #ffffff;
+    padding-bottom: 70px;
+    position: relative;
+}
+
+.custom-footer h5 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #89073c;
+    position: relative;
+}
+
+.custom-footer h5::after {
+    content: "";
+    width: 40px;
+    height: 2px;
+    background-color: var(--secondary-color);
+    position: absolute;
+    bottom: -6px;
+    left: 0;
+}
+
+/* Links Styling */
+.custom-footer a {
+    color: var(--pale-grey);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.custom-footer a:hover {
+    color: #89073c;
+}
+
+/* Learn More Link */
+.learn-more-link {
+    color: #89073c;
+    font-weight: 500;
+    display: inline-block;
+    margin-top: 10px;
+    transition: transform 0.3s ease;
+}
+
+.learn-more-link:hover {
+    transform: translateX(5px);
+}
+
+/* List Styling */
+.custom-footer ul {
+    padding-left: 0;
+}
+
+.custom-footer ul li {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+/* Icons in List */
+.custom-footer ul li i {
+    color: #f6f6f6;
+    margin-right: 8px;
+}
+
+.custom-footer h5 {
+    color: #f6f6f6;
+    margin-right: 8px;
+}
+
+/* Social Media Icons */
+.social-icons {
+    display: flex;
+    gap: 12px;
+}
+
+.social-icon {
+    width: 36px;
+    height: 36px;
+    background-color: #858b80;
+    color: #89073c;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.social-icon:hover {
+    background-color: var(--pale-grey);
+    transform: translateY(-3px);
+}
+
+/* Copyright Section */
+.copyright {
+    background-color: #858b80;
+    color: var(--pale-grey);
+    font-size: 14px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+/* Responsive Fixes */
+@media (max-width: 768px) {
+    .custom-footer {
+        text-align: center;
+    }
+
+    .social-icons {
+        justify-content: center;
+    }
+}
+
+/* Bulk Ordering Badge */
+.badge-wholesale {
+    font-size: 0.7rem;
+    z-index: 10;
+    border-bottom-right-radius: 0.5rem;
+}
+
+/* Breadcrumb */
+/* Prevent slash breaking weirdly */
+.breadcrumb-item+.breadcrumb-item::before {
+    white-space: nowrap;
+}
+
+/* Keep breadcrumb in one line */
+.breadcrumb-ellipsis {
+    display: flex;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+/* Truncate only last item */
+.breadcrumb-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+    /* allows shrinking */
+    min-width: 0;
+    /* needed for ellipsis in flexbox */
+}

@@ -1,0 +1,56 @@
+# Enable URL rewriting
+RewriteEngine On
+
+# --------------------------------------
+# 1. Remove .php extension for actual files
+# e.g., /contact → contact.php
+# --------------------------------------
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.+)$ $1.php [L]
+
+# --------------------------------------
+# 2. Redirect clean slugs to product-view.php
+# Only if not an actual file/directory and not a known static page
+# --------------------------------------
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Exclude static pages and known folders
+RewriteCond %{REQUEST_URI} !^/(login|register|about-us|contact|cart|checkout|account|wishlist|search|admin|assets|uploads|images|css|js|api|config|layouts|vendor|404\.php|product-view\.php|index\.php) [NC]
+
+# If not excluded, treat as product slug
+RewriteRule ^([a-zA-Z0-9\-]+)$ product-view.php?slug=$1 [L,QSA]
+
+# --------------------------------------
+# NEW: Rewrite vendor URLs like /store/{slug} to vendor-store.php
+# Works on local and live server (adjust base path for localhost)
+# --------------------------------------
+
+# If on localhost and your project is in /isokoni/, add this RewriteBase
+# RewriteBase /isokoni/
+
+# Vendor store URL rewrite:
+RewriteRule ^vendor/([a-zA-Z0-9\-]+)/?$ vendor-store.php?slug=$1 [L,QSA]
+
+# --------------------------------------
+# Rewrite clean category URLs to category-view.php
+RewriteRule ^category/([a-zA-Z0-9\-]+)/?$ category-view.php?slug=$1 [L,QSA]
+
+# --------------------------------------
+# 3. Protect .env file
+# --------------------------------------
+<Files .env>
+  Order allow,deny
+  Deny from all
+</Files>
+
+# -------------------
+# Error Handling
+# -------------------
+
+# Localhost (http://localhost/epikitours/)
+ErrorDocument 404 /epikitours/404.php
+
+# Live server (https://epikitours.com/)
+# Uncomment this when deployed live
+# ErrorDocument 404 /404.php
