@@ -3,14 +3,13 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 27, 2025 at 09:56 AM
--- Server version: 10.4.32-MariaDB
+-- Generation Time: Aug 28, 2025 at 04:52 PM
+-- Server version: 8.0.37
 -- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
-SET time_zone = "+03:00";
-
+SET time_zone = "+00:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -29,11 +28,11 @@ SET time_zone = "+03:00";
 --
 
 CREATE TABLE `epi_activity_logs` (
-  `id` bigint(20) NOT NULL,
-  `user_id` bigint(20) DEFAULT NULL,
-  `action` varchar(255) DEFAULT NULL,
-  `ip_address` varchar(50) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `id` bigint NOT NULL,
+  `user_id` bigint DEFAULT NULL,
+  `action` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ip_address` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -41,15 +40,15 @@ CREATE TABLE `epi_activity_logs` (
 --
 
 INSERT INTO `epi_activity_logs` (`id`, `user_id`, `action`, `ip_address`, `created_at`) VALUES
-(1, 1, 'User Registered', '::1', '2025-08-25 09:21:06'),
-(2, 1, 'User Logged In', '::1', '2025-08-25 09:29:21'),
-(3, 1, 'User Logged In', '::1', '2025-08-25 09:32:05'),
-(4, 1, 'User Logged In', '::1', '2025-08-25 09:34:23'),
-(5, 1, 'User Logged In', '::1', '2025-08-25 09:35:32'),
-(6, 1, 'User Logged In', '::1', '2025-08-25 09:36:09'),
-(7, 1, 'User Logged In', '::1', '2025-08-25 09:39:38'),
-(8, 1, 'User Logged In', '::1', '2025-08-25 09:42:25'),
-(9, 1, 'User Logged In', '::1', '2025-08-25 09:46:50'),
+(1, NULL, 'User Registered', '::1', '2025-08-25 09:21:06'),
+(2, NULL, 'User Logged In', '::1', '2025-08-25 09:29:21'),
+(3, NULL, 'User Logged In', '::1', '2025-08-25 09:32:05'),
+(4, NULL, 'User Logged In', '::1', '2025-08-25 09:34:23'),
+(5, NULL, 'User Logged In', '::1', '2025-08-25 09:35:32'),
+(6, NULL, 'User Logged In', '::1', '2025-08-25 09:36:09'),
+(7, NULL, 'User Logged In', '::1', '2025-08-25 09:39:38'),
+(8, NULL, 'User Logged In', '::1', '2025-08-25 09:42:25'),
+(9, NULL, 'User Logged In', '::1', '2025-08-25 09:46:50'),
 (10, 4, 'User Registered', '::1', '2025-08-25 09:49:23'),
 (11, 4, 'User Logged In', '::1', '2025-08-25 09:49:26'),
 (12, 4, 'User Logged In', '::1', '2025-08-25 09:50:33'),
@@ -70,7 +69,15 @@ INSERT INTO `epi_activity_logs` (`id`, `user_id`, `action`, `ip_address`, `creat
 (27, 4, 'User Logged In', '::1', '2025-08-26 05:01:55'),
 (28, 4, 'User Logged In', '::1', '2025-08-26 07:06:08'),
 (29, 4, 'User Logged In', '::1', '2025-08-26 15:11:18'),
-(30, 4, 'User Logged In', '::1', '2025-08-27 06:56:51');
+(30, 4, 'User Logged In', '::1', '2025-08-27 06:56:51'),
+(31, 5, 'User Logged In', '::1', '2025-08-28 05:57:11'),
+(32, 5, 'User Logged In', '::1', '2025-08-28 05:58:11'),
+(33, NULL, 'User Registered', '::1', '2025-08-28 14:06:45'),
+(34, NULL, 'Admin Created User', '::1', '2025-08-28 14:26:40'),
+(35, NULL, 'Admin Created User', '::1', '2025-08-28 14:27:41'),
+(36, NULL, 'Admin Created User', '::1', '2025-08-28 14:32:54'),
+(37, NULL, 'Admin Created User', '::1', '2025-08-28 14:36:19'),
+(38, NULL, 'Admin Created User', '::1', '2025-08-28 14:50:10');
 
 -- --------------------------------------------------------
 
@@ -79,12 +86,12 @@ INSERT INTO `epi_activity_logs` (`id`, `user_id`, `action`, `ip_address`, `creat
 --
 
 CREATE TABLE `epi_bookings` (
-  `id` bigint(20) NOT NULL,
-  `user_id` bigint(20) NOT NULL,
-  `tour_id` bigint(20) NOT NULL,
-  `booking_date` timestamp NOT NULL DEFAULT current_timestamp(),
-  `status` enum('pending','confirmed','canceled') DEFAULT 'pending',
-  `confirmation_code` varchar(100) DEFAULT NULL
+  `id` bigint NOT NULL,
+  `user_id` bigint NOT NULL,
+  `tour_id` bigint NOT NULL,
+  `booking_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `status` enum('pending','confirmed','canceled') COLLATE utf8mb4_general_ci DEFAULT 'pending',
+  `confirmation_code` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -94,12 +101,12 @@ CREATE TABLE `epi_bookings` (
 --
 
 CREATE TABLE `epi_notifications` (
-  `id` bigint(20) NOT NULL,
-  `user_id` bigint(20) NOT NULL,
-  `tour_id` bigint(20) DEFAULT NULL,
-  `type` enum('email','system','sms') DEFAULT 'email',
-  `message` text DEFAULT NULL,
-  `status` enum('sent','pending','failed') DEFAULT 'pending',
+  `id` bigint NOT NULL,
+  `user_id` bigint NOT NULL,
+  `tour_id` bigint DEFAULT NULL,
+  `type` enum('email','system','sms') COLLATE utf8mb4_general_ci DEFAULT 'email',
+  `message` text COLLATE utf8mb4_general_ci,
+  `status` enum('sent','pending','failed') COLLATE utf8mb4_general_ci DEFAULT 'pending',
   `sent_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -117,16 +124,16 @@ INSERT INTO `epi_notifications` (`id`, `user_id`, `tour_id`, `type`, `message`, 
 --
 
 CREATE TABLE `epi_payments` (
-  `id` int(11) NOT NULL,
-  `booking_id` int(11) DEFAULT NULL,
-  `user_id` int(11) DEFAULT NULL,
+  `id` int NOT NULL,
+  `booking_id` int DEFAULT NULL,
+  `user_id` int DEFAULT NULL,
   `amount` decimal(10,2) NOT NULL,
-  `currency` varchar(10) DEFAULT 'KES',
-  `payment_method` varchar(50) NOT NULL,
-  `transaction_id` varchar(100) DEFAULT NULL,
-  `status` enum('pending','completed','failed','refunded') DEFAULT 'pending',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `currency` varchar(10) COLLATE utf8mb4_general_ci DEFAULT 'KES',
+  `payment_method` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `transaction_id` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `status` enum('pending','completed','failed','refunded') COLLATE utf8mb4_general_ci DEFAULT 'pending',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -136,14 +143,14 @@ CREATE TABLE `epi_payments` (
 --
 
 CREATE TABLE `epi_sessions` (
-  `id` bigint(20) NOT NULL,
-  `tour_id` bigint(20) NOT NULL,
-  `session_link` varchar(255) NOT NULL,
+  `id` bigint NOT NULL,
+  `tour_id` bigint NOT NULL,
+  `session_link` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `start_time` datetime DEFAULT NULL,
   `end_time` datetime DEFAULT NULL,
-  `status` enum('scheduled','live','ended') DEFAULT 'scheduled',
-  `assigned_agent_id` bigint(20) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `status` enum('scheduled','live','ended') COLLATE utf8mb4_general_ci DEFAULT 'scheduled',
+  `assigned_agent_id` bigint DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -153,22 +160,22 @@ CREATE TABLE `epi_sessions` (
 --
 
 CREATE TABLE `epi_tours` (
-  `id` bigint(20) NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `slug` varchar(255) NOT NULL,
-  `description` text DEFAULT NULL,
+  `id` bigint NOT NULL,
+  `title` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `slug` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `description` text COLLATE utf8mb4_general_ci,
   `start_date` date NOT NULL,
   `end_date` date NOT NULL,
-  `location` varchar(255) DEFAULT NULL,
-  `youtube_link` varchar(255) DEFAULT NULL,
-  `marzipano_path` varchar(255) DEFAULT NULL,
-  `jitsi_link` varchar(255) DEFAULT NULL,
-  `preview_thumbnail` varchar(255) DEFAULT NULL,
-  `agent_id` bigint(20) DEFAULT NULL,
-  `status` enum('upcoming','ongoing','completed','canceled') DEFAULT 'upcoming',
-  `created_by` bigint(20) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `location` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `youtube_link` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `marzipano_path` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `jitsi_link` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `preview_thumbnail` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `agent_id` bigint DEFAULT NULL,
+  `status` enum('upcoming','ongoing','completed','canceled') COLLATE utf8mb4_general_ci DEFAULT 'upcoming',
+  `created_by` bigint NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -178,10 +185,10 @@ CREATE TABLE `epi_tours` (
 --
 
 CREATE TABLE `epi_tour_agents` (
-  `id` bigint(20) NOT NULL,
-  `tour_id` bigint(20) NOT NULL,
-  `agent_id` bigint(20) NOT NULL,
-  `assigned_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `id` bigint NOT NULL,
+  `tour_id` bigint NOT NULL,
+  `agent_id` bigint NOT NULL,
+  `assigned_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -191,14 +198,14 @@ CREATE TABLE `epi_tour_agents` (
 --
 
 CREATE TABLE `epi_tour_jitsi` (
-  `id` bigint(20) NOT NULL,
-  `api_key` varchar(255) NOT NULL,
-  `api_secret` varchar(255) DEFAULT NULL,
-  `base_url` varchar(255) DEFAULT 'https://meet.jit.si',
-  `config_json` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`config_json`)),
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `id` bigint NOT NULL,
+  `api_key` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `api_secret` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `base_url` varchar(255) COLLATE utf8mb4_general_ci DEFAULT 'https://meet.jit.si',
+  `config_json` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ;
 
 -- --------------------------------------------------------
 
@@ -207,12 +214,12 @@ CREATE TABLE `epi_tour_jitsi` (
 --
 
 CREATE TABLE `epi_tour_media` (
-  `id` bigint(20) NOT NULL,
-  `tour_id` bigint(20) NOT NULL,
-  `media_type` enum('image','video','panorama') NOT NULL,
-  `file_path` varchar(255) NOT NULL,
-  `description` text DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `id` bigint NOT NULL,
+  `tour_id` bigint NOT NULL,
+  `media_type` enum('image','video','panorama') COLLATE utf8mb4_general_ci NOT NULL,
+  `file_path` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `description` text COLLATE utf8mb4_general_ci,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -222,31 +229,32 @@ CREATE TABLE `epi_tour_media` (
 --
 
 CREATE TABLE `epi_users` (
-  `id` bigint(20) NOT NULL,
-  `first_name` varchar(100) NOT NULL,
-  `last_name` varchar(100) NOT NULL,
-  `email` varchar(150) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `phone` varchar(30) DEFAULT NULL,
-  `user_role` enum('admin','guide','visitor') NOT NULL DEFAULT 'visitor',
-  `profile_picture` varchar(255) DEFAULT NULL,
-  `email_verified` tinyint(1) DEFAULT 0,
-  `verification_token` varchar(255) DEFAULT NULL,
-  `password_reset_token` varchar(255) DEFAULT NULL,
+  `id` bigint NOT NULL,
+  `first_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `last_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `email` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `phone` varchar(30) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `user_role` enum('admin','guide','visitor') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'visitor',
+  `profile_picture` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `email_verified` tinyint(1) DEFAULT '0',
+  `verification_token` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `status` enum('dormant','active') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'active',
+  `password_reset_token` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `password_reset_expires` datetime DEFAULT NULL,
   `last_login` timestamp NULL DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `epi_users`
 --
 
-INSERT INTO `epi_users` (`id`, `first_name`, `last_name`, `email`, `password`, `phone`, `user_role`, `profile_picture`, `email_verified`, `verification_token`, `password_reset_token`, `password_reset_expires`, `last_login`, `created_at`, `updated_at`) VALUES
-(1, 'test', 'test', 'godfreyw@gmail.com', '$2y$10$4rKWk3MLpuYr.fuuO83lmu1TnltShaothxWPj5BYFiCw21503hBGC', '0706006230', 'visitor', NULL, 0, NULL, NULL, NULL, '2025-08-25 09:46:50', '2025-08-25 09:21:06', '2025-08-25 09:49:13'),
-(2, 'Alice', 'Wanjiku', 'guide@example.com', '*EF53AC6FDCE36A16350904509C4D00B826AB5D99', '254700111222', 'visitor', NULL, 1, NULL, NULL, NULL, NULL, '2025-08-25 09:46:10', '2025-08-25 09:46:10'),
-(4, 'Godfrey', 'Sifuna', 'sifuna.godfreyw@gmail.com', '$2y$10$BF.L6FaUqd5DorBqsgnf1euWcoAHqlduFn55OEjKm1Ff0YqojhvBa', '0706006230', 'admin', NULL, 0, NULL, NULL, NULL, '2025-08-27 06:56:51', '2025-08-25 09:49:23', '2025-08-27 06:56:51');
+INSERT INTO `epi_users` (`id`, `first_name`, `last_name`, `email`, `password`, `phone`, `user_role`, `profile_picture`, `email_verified`, `verification_token`, `status`, `password_reset_token`, `password_reset_expires`, `last_login`, `created_at`, `updated_at`) VALUES
+(2, 'Alice', 'Wanjiku', 'guide@example.com', '*EF53AC6FDCE36A16350904509C4D00B826AB5D99', '254700111222', 'visitor', NULL, 1, NULL, 'active', NULL, NULL, NULL, '2025-08-25 09:46:10', '2025-08-28 08:32:48'),
+(4, 'Godfrey', 'Sifuna', 'sifuna.godfreyw@gmail.com', '$2y$10$BF.L6FaUqd5DorBqsgnf1euWcoAHqlduFn55OEjKm1Ff0YqojhvBa', '0706006230', 'admin', NULL, 0, NULL, 'active', NULL, NULL, '2025-08-27 06:56:51', '2025-08-25 09:49:23', '2025-08-28 08:32:48'),
+(5, 'Dana', 'Katisya', 'danakatisya@gmail.com', '$2y$10$pbZc2IBwKUog3iSS9ko.lu7/HyrjIy1BwJLUWc388.Wq3TYDrGdR6', '0758926969', 'admin', NULL, 0, NULL, 'active', NULL, NULL, '2025-08-28 05:58:11', '2025-08-28 05:56:34', '2025-08-28 12:39:34');
 
 -- --------------------------------------------------------
 
@@ -255,10 +263,10 @@ INSERT INTO `epi_users` (`id`, `first_name`, `last_name`, `email`, `password`, `
 --
 
 CREATE TABLE `isk_system_logs` (
-  `id` int(11) NOT NULL,
-  `message` text DEFAULT NULL,
-  `status` enum('unread','read') DEFAULT 'unread',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `id` int NOT NULL,
+  `message` text COLLATE utf8mb4_general_ci,
+  `status` enum('unread','read') COLLATE utf8mb4_general_ci DEFAULT 'unread',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -354,67 +362,67 @@ ALTER TABLE `isk_system_logs`
 -- AUTO_INCREMENT for table `epi_activity_logs`
 --
 ALTER TABLE `epi_activity_logs`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT for table `epi_bookings`
 --
 ALTER TABLE `epi_bookings`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `epi_notifications`
 --
 ALTER TABLE `epi_notifications`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `epi_payments`
 --
 ALTER TABLE `epi_payments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `epi_sessions`
 --
 ALTER TABLE `epi_sessions`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `epi_tours`
 --
 ALTER TABLE `epi_tours`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `epi_tour_agents`
 --
 ALTER TABLE `epi_tour_agents`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `epi_tour_jitsi`
 --
 ALTER TABLE `epi_tour_jitsi`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `epi_tour_media`
 --
 ALTER TABLE `epi_tour_media`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `epi_users`
 --
 ALTER TABLE `epi_users`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `isk_system_logs`
 --
 ALTER TABLE `isk_system_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
@@ -424,7 +432,7 @@ ALTER TABLE `isk_system_logs`
 -- Constraints for table `epi_activity_logs`
 --
 ALTER TABLE `epi_activity_logs`
-  ADD CONSTRAINT `epi_activity_logs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `epi_users` (`id`);
+  ADD CONSTRAINT `epi_activity_logs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `epi_users` (`id`) ON DELETE SET NULL ON UPDATE RESTRICT;
 
 --
 -- Constraints for table `epi_bookings`
@@ -437,8 +445,7 @@ ALTER TABLE `epi_bookings`
 -- Constraints for table `epi_notifications`
 --
 ALTER TABLE `epi_notifications`
-  ADD CONSTRAINT `epi_notifications_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `epi_users` (`id`),
-  ADD CONSTRAINT `epi_notifications_ibfk_2` FOREIGN KEY (`tour_id`) REFERENCES `epi_tours` (`id`) ON DELETE SET NULL;
+  ADD CONSTRAINT `epi_notifications_ibfk_2` FOREIGN KEY (`tour_id`) REFERENCES `epi_tours` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 --
 -- Constraints for table `epi_sessions`

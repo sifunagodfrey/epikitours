@@ -8,6 +8,46 @@ require_once __DIR__ . '/../../config/database.php';
 $pageTitle = "Users";
 $metaDescription = "Manage users, roles, and access in the EpikiTours admin panel.";
 
+// -------------------
+// Fetch all users
+// -------------------
+$users = $pdo->query("SELECT * FROM epi_users ORDER BY created_at DESC");
+
+// -------------------
+// Delete User
+// -------------------
+session_start();
+
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['delete_user_id'])) {
+    $userToDelete = intval($_POST['delete_user_id']);
+
+    try {
+        $stmt = $pdo->prepare("DELETE FROM epi_users WHERE id = :id");
+        $stmt->execute([':id' => $userToDelete]);
+
+        if ($stmt->rowCount() > 0) {
+            $_SESSION['flash_success'] = "User deleted successfully.";
+        } else {
+            $_SESSION['flash_error'] = "User not found or could not be deleted.";
+        }
+    } catch (PDOException $e) {
+        $_SESSION['flash_error'] = "Error: " . $e->getMessage();
+    }
+
+    // Redirect so refresh doesn't resubmit the delete
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit;
+}
+
+// -------------------
+// Retrieve and clear flash messages
+// -------------------
+$deleteSuccess = $_SESSION['flash_success'] ?? "";
+$deleteError   = $_SESSION['flash_error'] ?? "";
+
+unset($_SESSION['flash_success'], $_SESSION['flash_error']);
+
+
 ob_start();
 ?>
 
@@ -22,10 +62,17 @@ ob_start();
 <!-- Page Header -->
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h4 class="mb-0">User Management</h4>
-    <a href="#" class="btn btn-primary">
+    <a href="create-account.php" class="btn btn-primary">
         <i class="fas fa-user-plus me-1"></i> Add New User
     </a>
 </div>
+
+<!-- Delete alert messages -->
+<?php if ($deleteSuccess): ?>
+  <div class="alert alert-success"><?= $deleteSuccess ?></div>
+<?php elseif ($deleteError): ?>
+  <div class="alert alert-danger"><?= $deleteError ?></div>
+<?php endif; ?>
 
 <!-- User Table -->
 <div class="card shadow-sm border-0 mb-4">
@@ -44,13 +91,56 @@ ob_start();
                     </tr>
                 </thead>
                 <tbody>
+                    <?php 
+                        $i = 1;    
+                        while ($row = $users->fetch(PDO::FETCH_ASSOC)):
+                    ?>
                     <tr>
-                        <td colspan="7" class="text-center">User data will appear here...</td>
+                        <td><?= $i++ ?></td>
+                        <td><?= htmlspecialchars($row['first_name'] . ' ' . $row['last_name']); ?></td>
+                        <td><?= htmlspecialchars($row['email']); ?></td>
+                        <td><?= htmlspecialchars($row['user_role']); ?></td>
+                        <td><?= ucfirst($row['status']); ?></td>
+                        <td><?= htmlspecialchars($row['created_at']); ?></td>
+                        <td>
+                            <a href="edit.php?id=<?= $row['id'] ?>" class="btn btn-outline-primary btn-sm px-2 py-1 text-decoration-none">Edit</a>
+                            <button type="button" 
+                                    class="btn btn-outline-danger btn-sm"
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#deleteModal"
+                                    data-user-id="<?= $row['id'] ?>" 
+                                    data-user-name="<?= htmlspecialchars($row['first_name'] . ' ' . $row['last_name']) ?>">
+                                Delete
+                            </button>
+                        </td>
                     </tr>
+                    <?php endwhile; ?>
                 </tbody>
             </table>
         </div>
     </div>
+</div>
+
+<!-- Reusable Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <form method="POST">
+        <div class="modal-header">
+          <h5 class="modal-title text-primary" id="deleteModalLabel">Confirm Deletion</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to delete <strong id="deleteUserName"></strong>?
+        </div>
+        <div class="modal-footer">
+          <input type="hidden" name="delete_user_id" id="deleteUserId">
+          <button type="submit" class="btn btn-danger">Delete</button>
+          <button type="button" class="btn btn-outline-primary px-2 py-1" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
 
 <!-- Roles & Permissions -->
@@ -84,6 +174,23 @@ ob_start();
     </div>
 </div>
 
+<!-- JS toggles delete modal -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const deleteModal = document.getElementById('deleteModal');
+  deleteModal.addEventListener('show.bs.modal', event => {
+    const button = event.relatedTarget; 
+    const userId = button.getAttribute('data-user-id');
+    const userName = button.getAttribute('data-user-name');
+
+    // Update modal content
+    deleteModal.querySelector('#deleteUserId').value = userId;
+    deleteModal.querySelector('#deleteUserName').textContent = userName;
+  });
+});
+</script>
+
 <?php
 $pageContent = ob_get_clean();
 include BASE_PATH . 'layouts/admin-layout.php';
+?>
