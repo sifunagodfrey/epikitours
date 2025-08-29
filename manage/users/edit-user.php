@@ -123,6 +123,7 @@ ob_start();
     </ol>
 </nav>
 
+<!-- Edit form -->
 <div class="d-flex">
     <div class="container-fluid">
         <h4 class="mb-0">Account Details</h4>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 28, 2025 at 04:52 PM
+-- Generation Time: Aug 29, 2025 at 04:27 PM
 -- Server version: 8.0.37
 -- PHP Version: 8.2.12
 
@@ -30,8 +30,8 @@ SET time_zone = "+00:00";
 CREATE TABLE `epi_activity_logs` (
   `id` bigint NOT NULL,
   `user_id` bigint DEFAULT NULL,
-  `action` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `ip_address` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `action` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ip_address` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -90,8 +90,8 @@ CREATE TABLE `epi_bookings` (
   `user_id` bigint NOT NULL,
   `tour_id` bigint NOT NULL,
   `booking_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `status` enum('pending','confirmed','canceled') COLLATE utf8mb4_general_ci DEFAULT 'pending',
-  `confirmation_code` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL
+  `status` enum('pending','confirmed','canceled') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'pending',
+  `confirmation_code` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -104,9 +104,9 @@ CREATE TABLE `epi_notifications` (
   `id` bigint NOT NULL,
   `user_id` bigint NOT NULL,
   `tour_id` bigint DEFAULT NULL,
-  `type` enum('email','system','sms') COLLATE utf8mb4_general_ci DEFAULT 'email',
-  `message` text COLLATE utf8mb4_general_ci,
-  `status` enum('sent','pending','failed') COLLATE utf8mb4_general_ci DEFAULT 'pending',
+  `type` enum('email','system','sms') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'email',
+  `message` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `status` enum('sent','pending','failed') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'pending',
   `sent_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -128,13 +128,78 @@ CREATE TABLE `epi_payments` (
   `booking_id` int DEFAULT NULL,
   `user_id` int DEFAULT NULL,
   `amount` decimal(10,2) NOT NULL,
-  `currency` varchar(10) COLLATE utf8mb4_general_ci DEFAULT 'KES',
-  `payment_method` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `transaction_id` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `status` enum('pending','completed','failed','refunded') COLLATE utf8mb4_general_ci DEFAULT 'pending',
+  `currency` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'KES',
+  `payment_method` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `transaction_id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `status` enum('pending','completed','failed','refunded') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'pending',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `epi_permissions`
+--
+
+CREATE TABLE `epi_permissions` (
+  `id` int NOT NULL,
+  `permission` varchar(100) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `epi_permissions`
+--
+
+INSERT INTO `epi_permissions` (`id`, `permission`, `created_at`, `updated_at`) VALUES
+(1, 'Access admin settings', '2025-08-29 08:29:44', '2025-08-29 08:29:44'),
+(2, 'Access all users', '2025-08-29 08:29:55', '2025-08-29 08:29:55'),
+(3, 'Access to newsletter', '2025-08-29 08:30:40', '2025-08-29 08:30:40'),
+(4, 'Access to reports', '2025-08-29 08:30:48', '2025-08-29 08:30:48'),
+(5, 'Access to messages', '2025-08-29 08:30:58', '2025-08-29 08:30:58');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `epi_roles`
+--
+
+CREATE TABLE `epi_roles` (
+  `id` int NOT NULL,
+  `role` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `epi_roles`
+--
+
+INSERT INTO `epi_roles` (`id`, `role`, `created_at`, `updated_at`) VALUES
+(1, 'admin', '2025-08-29 08:20:29', '2025-08-29 08:20:29'),
+(2, 'guide', '2025-08-29 10:09:56', '2025-08-29 10:10:31'),
+(3, 'visitor', '2025-08-29 10:10:05', '2025-08-29 10:10:39');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `epi_role_permissions`
+--
+
+CREATE TABLE `epi_role_permissions` (
+  `role_id` int NOT NULL,
+  `permission_id` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `epi_role_permissions`
+--
+
+INSERT INTO `epi_role_permissions` (`role_id`, `permission_id`) VALUES
+(1, 1),
+(1, 2);
 
 -- --------------------------------------------------------
 
@@ -145,10 +210,10 @@ CREATE TABLE `epi_payments` (
 CREATE TABLE `epi_sessions` (
   `id` bigint NOT NULL,
   `tour_id` bigint NOT NULL,
-  `session_link` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `session_link` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `start_time` datetime DEFAULT NULL,
   `end_time` datetime DEFAULT NULL,
-  `status` enum('scheduled','live','ended') COLLATE utf8mb4_general_ci DEFAULT 'scheduled',
+  `status` enum('scheduled','live','ended') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'scheduled',
   `assigned_agent_id` bigint DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -161,18 +226,18 @@ CREATE TABLE `epi_sessions` (
 
 CREATE TABLE `epi_tours` (
   `id` bigint NOT NULL,
-  `title` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `slug` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `description` text COLLATE utf8mb4_general_ci,
+  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `slug` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `start_date` date NOT NULL,
   `end_date` date NOT NULL,
-  `location` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `youtube_link` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `marzipano_path` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `jitsi_link` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `preview_thumbnail` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `location` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `youtube_link` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `marzipano_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `jitsi_link` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `preview_thumbnail` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `agent_id` bigint DEFAULT NULL,
-  `status` enum('upcoming','ongoing','completed','canceled') COLLATE utf8mb4_general_ci DEFAULT 'upcoming',
+  `status` enum('upcoming','ongoing','completed','canceled') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'upcoming',
   `created_by` bigint NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -199,13 +264,13 @@ CREATE TABLE `epi_tour_agents` (
 
 CREATE TABLE `epi_tour_jitsi` (
   `id` bigint NOT NULL,
-  `api_key` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `api_secret` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `base_url` varchar(255) COLLATE utf8mb4_general_ci DEFAULT 'https://meet.jit.si',
+  `api_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `api_secret` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `base_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'https://meet.jit.si',
   `config_json` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -216,9 +281,9 @@ CREATE TABLE `epi_tour_jitsi` (
 CREATE TABLE `epi_tour_media` (
   `id` bigint NOT NULL,
   `tour_id` bigint NOT NULL,
-  `media_type` enum('image','video','panorama') COLLATE utf8mb4_general_ci NOT NULL,
-  `file_path` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `description` text COLLATE utf8mb4_general_ci,
+  `media_type` enum('image','video','panorama') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `file_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -230,17 +295,17 @@ CREATE TABLE `epi_tour_media` (
 
 CREATE TABLE `epi_users` (
   `id` bigint NOT NULL,
-  `first_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `last_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `email` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
-  `password` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `phone` varchar(30) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `user_role` enum('admin','guide','visitor') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'visitor',
-  `profile_picture` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `first_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `last_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `email` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `phone` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `user_role` enum('admin','guide','visitor') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'visitor',
+  `profile_picture` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `email_verified` tinyint(1) DEFAULT '0',
-  `verification_token` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `verification_token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `status` enum('dormant','active') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'active',
-  `password_reset_token` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `password_reset_token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `password_reset_expires` datetime DEFAULT NULL,
   `last_login` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -264,8 +329,8 @@ INSERT INTO `epi_users` (`id`, `first_name`, `last_name`, `email`, `password`, `
 
 CREATE TABLE `isk_system_logs` (
   `id` int NOT NULL,
-  `message` text COLLATE utf8mb4_general_ci,
-  `status` enum('unread','read') COLLATE utf8mb4_general_ci DEFAULT 'unread',
+  `message` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `status` enum('unread','read') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'unread',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -303,6 +368,25 @@ ALTER TABLE `epi_notifications`
 ALTER TABLE `epi_payments`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `transaction_id` (`transaction_id`);
+
+--
+-- Indexes for table `epi_permissions`
+--
+ALTER TABLE `epi_permissions`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `epi_roles`
+--
+ALTER TABLE `epi_roles`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `epi_role_permissions`
+--
+ALTER TABLE `epi_role_permissions`
+  ADD PRIMARY KEY (`role_id`,`permission_id`),
+  ADD KEY `permission_id` (`permission_id`);
 
 --
 -- Indexes for table `epi_sessions`
@@ -383,6 +467,18 @@ ALTER TABLE `epi_payments`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `epi_permissions`
+--
+ALTER TABLE `epi_permissions`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `epi_roles`
+--
+ALTER TABLE `epi_roles`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
 -- AUTO_INCREMENT for table `epi_sessions`
 --
 ALTER TABLE `epi_sessions`
@@ -446,6 +542,13 @@ ALTER TABLE `epi_bookings`
 --
 ALTER TABLE `epi_notifications`
   ADD CONSTRAINT `epi_notifications_ibfk_2` FOREIGN KEY (`tour_id`) REFERENCES `epi_tours` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+--
+-- Constraints for table `epi_role_permissions`
+--
+ALTER TABLE `epi_role_permissions`
+  ADD CONSTRAINT `epi_role_permissions_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `epi_roles` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `epi_role_permissions_ibfk_2` FOREIGN KEY (`permission_id`) REFERENCES `epi_permissions` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `epi_sessions`

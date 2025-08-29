@@ -62,7 +62,7 @@ ob_start();
 <!-- Page Header -->
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h4 class="mb-0">User Management</h4>
-    <a href="create-account.php" class="btn btn-primary">
+    <a href="create-account" class="btn btn-primary">
         <i class="fas fa-user-plus me-1"></i> Add New User
     </a>
 </div>
@@ -103,7 +103,7 @@ ob_start();
                         <td><?= ucfirst($row['status']); ?></td>
                         <td><?= htmlspecialchars($row['created_at']); ?></td>
                         <td>
-                            <a href="edit.php?id=<?= $row['id'] ?>" class="btn btn-outline-primary btn-sm px-2 py-1 text-decoration-none">Edit</a>
+                            <a href="edit-user.php?id=<?= $row['id'] ?>" class="btn btn-outline-primary btn-sm px-2 py-1 text-decoration-none">Edit</a>
                             <button type="button" 
                                     class="btn btn-outline-danger btn-sm"
                                     data-bs-toggle="modal" 
@@ -152,7 +152,7 @@ ob_start();
             </div>
             <div class="card-body">
                 <p class="text-muted">Manage user roles (Admin, Staff, Customer)...</p>
-                <a href="#" class="btn btn-outline-secondary btn-sm">
+                <a href="manage-roles" class="btn btn-outline-secondary btn-sm">
                     <i class="fas fa-cog me-1"></i> Manage Roles
                 </a>
             </div>
@@ -166,7 +166,7 @@ ob_start();
             </div>
             <div class="card-body">
                 <p class="text-muted">Set permissions for different user roles...</p>
-                <a href="#" class="btn btn-outline-secondary btn-sm">
+                <a href="manage-permissions" class="btn btn-outline-secondary btn-sm">
                     <i class="fas fa-edit me-1"></i> Edit Permissions
                 </a>
             </div>
