@@ -5,8 +5,8 @@ require_once __DIR__ . '/../../config/database.php';
 // -------------------
 // Page Metadata
 // -------------------
-$pageTitle = "Add New Tour";
-$metaDescription = "Add a new tour to EpikiTours admin panel.";
+$pageTitle = "Update Tour";
+$metaDescription = "Edit an existing tour to EpikiTours admin panel.";
 
 $errors = [];
 $success = "";
@@ -16,6 +16,24 @@ $success = "";
 // -------------------
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
+}
+
+// -------------------
+// Get tour id from URL
+// -------------------
+$tourId = $_GET['id'] ?? null;
+if (!$tourId) {
+    die("Missing tour ID.");
+}
+
+// -------------------
+// Fetch existing tour
+// -------------------
+$stmt = $pdo->prepare("SELECT * FROM epi_tours WHERE id = ?");
+$stmt->execute([$tourId]);
+$tour = $stmt->fetch(PDO::FETCH_ASSOC);
+if (!$tour) {
+    die("Tour not found.");
 }
 
 // -------------------
@@ -42,19 +60,19 @@ function generateSlug($pdo, $title)
 // Handle Form Submit
 // -------------------
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $title = trim($_POST['title'] ?? '');
-    $description = trim($_POST['description'] ?? '');
-    $start_date = $_POST['start_date'] ?? '';
-    $start_time = $_POST['start_time'] ?? '';
-    $end_date = $_POST['end_date'] ?? '';
-    $end_time = $_POST['end_time'] ?? '';
-    $location = trim($_POST['location'] ?? '');
-    $youtube_link = trim($_POST['youtube_link'] ?? '');
+    $title          = trim($_POST['title'] ?? '');
+    $description    = trim($_POST['description'] ?? '');
+    $start_date     = $_POST['start_date'] ?? '';
+    $start_time     = $_POST['start_time'] ?? '';
+    $end_date       = $_POST['end_date'] ?? '';
+    $end_time       = $_POST['end_time'] ?? '';
+    $location       = trim($_POST['location'] ?? '');
+    $youtube_link   = trim($_POST['youtube_link'] ?? '');
     $marzipano_path = trim($_POST['marzipano_path'] ?? '');
-    $jitsi_link = trim($_POST['jitsi_link'] ?? '');
-    $status = $_POST['status'] ?? 'upcoming';
+    $jitsi_link     = trim($_POST['jitsi_link'] ?? '');
+    $status         = $_POST['status'] ?? 'upcoming';
 
-    $preview_thumbnail = null;
+    $preview_thumbnail = $tour['preview_thumbnail'];
 
     // -------------------
     // Handle Thumbnail Upload
@@ -64,11 +82,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!is_dir($uploadDir)) {
             mkdir($uploadDir, 0777, true);
         }
-
         $ext = pathinfo($_FILES['preview_thumbnail']['name'], PATHINFO_EXTENSION);
         $fileName = uniqid('thumb_') . '.' . strtolower($ext);
         $filePath = $uploadDir . $fileName;
-
         if (move_uploaded_file($_FILES['preview_thumbnail']['tmp_name'], $filePath)) {
             $preview_thumbnail = 'uploads/' . $fileName;
         } else {
@@ -94,42 +110,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Insert Tour
     // -------------------
     $loggedInUserId = $_SESSION['user_id'] ?? null;
-
     if (!$loggedInUserId) {
-        $errors[] = "You must be logged in to create a tour.";
-    } else {
-        if (empty($errors)) {
-            try {
-                $slug = generateSlug($pdo, $title);
-
-                $stmt = $pdo->prepare("
-                    INSERT INTO epi_tours 
-                        (title, slug, description, start_date, start_time, end_date, end_time, location, youtube_link, marzipano_path, jitsi_link, preview_thumbnail, status, created_by) 
-                    VALUES 
-                        (:title, :slug, :description, :start_date, :start_time, :end_date, :end_time, :location, :youtube_link, :marzipano_path, :jitsi_link, :preview_thumbnail, :status, :created_by)
-                ");
-
-                $stmt->execute([
-                    ':title' => $title,
-                    ':slug' => $slug,
-                    ':description' => $description,
-                    ':start_date' => $start_date,
-                    ':start_time' => $start_time,
-                    ':end_date' => $end_date,
-                    ':end_time' => $end_time,
-                    ':location' => $location,
-                    ':youtube_link' => $youtube_link,
-                    ':marzipano_path' => $marzipano_path,
-                    ':jitsi_link' => $jitsi_link,
-                    ':preview_thumbnail' => $preview_thumbnail,
-                    ':status' => $status,
-                    ':created_by' => $loggedInUserId
-                ]);
-
-                $success = "Tour added successfully!";
-            } catch (PDOException $e) {
-                $errors[] = "Error saving tour: " . $e->getMessage();
-            }
+        $errors[] = "You must be logged in.";
+    } elseif (empty($errors)) {
+        try {
+            $stmt = $pdo->prepare("
+                UPDATE epi_tours SET
+                    title = :title,
+                    description = :description,
+                    start_date = :start_date,
+                    start_time = :start_time,
+                    end_date = :end_date,
+                    end_time = :end_time,
+                    location = :location,
+                    youtube_link = :youtube_link,
+                    marzipano_path = :marzipano_path,
+                    jitsi_link = :jitsi_link,
+                    preview_thumbnail = :preview_thumbnail,
+                    status = :status,
+                    updated_by = :updated_by,
+                    updated_at = NOW()
+                WHERE id = :id
+            ");
+            $stmt->execute([
+                ':title'            => $title,
+                ':description'      => $description,
+                ':start_date'       => $start_date,
+                ':start_time'       => $start_time,
+                ':end_date'         => $end_date,
+                ':end_time'         => $end_time,
+                ':location'         => $location,
+                ':youtube_link'     => $youtube_link,
+                ':marzipano_path'   => $marzipano_path,
+                ':jitsi_link'       => $jitsi_link,
+                ':preview_thumbnail'=> $preview_thumbnail,
+                ':status'           => $status,
+                ':updated_by'       => $loggedInUserId,
+                ':id'               => $tourId
+            ]);
+            $success = "Tour updated successfully.";
+            // refresh data
+            $stmt = $pdo->prepare("SELECT * FROM epi_tours WHERE id = ?");
+            $stmt->execute([$tourId]);
+            $tour = $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            $errors[] = "Error updating tour: " . $e->getMessage();
         }
     }
 }
@@ -142,13 +167,13 @@ ob_start();
     <ol class="breadcrumb bg-light p-2 rounded mb-3">
         <li class="breadcrumb-item"><a href="<?= BASE_URL ?>dashboard">Admin</a></li>
         <li class="breadcrumb-item"><a href="<?= BASE_URL ?>tours">Tours</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Add Tour</li>
+        <li class="breadcrumb-item active" aria-current="page">Edit Tour</li>
     </ol>
 </nav>
 
 <!-- Page Header -->
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="mb-0">Add New Tour</h4>
+    <h4 class="mb-0">Update Tour</h4>
 </div>
 
 <!-- Alerts -->
@@ -173,7 +198,7 @@ ob_start();
             <!-- Title -->
             <div class="mb-3">
                 <label for="title" class="form-label">Tour Title *</label>
-                <input type="text" name="title" id="title" class="form-control" required>
+                <input type="text" name="title" id="title" class="form-control" value="<?= htmlspecialchars($tour['title']) ?>" required>
                 <small class="form-text text-muted">Enter a clear and descriptive tour title (used to generate the
                     slug).</small>
             </div>
@@ -181,14 +206,14 @@ ob_start();
             <!-- Description -->
             <div class="mb-3">
                 <label for="description" class="form-label">Description</label>
-                <textarea name="description" id="description" class="form-control" rows="4"></textarea>
+                <textarea name="description" id="description" class="form-control" rows="4"><?= htmlspecialchars($tour['description']) ?></textarea>
                 <small class="form-text text-muted">Provide a detailed description of the tour (optional).</small>
             </div>
 
             <!-- Location -->
             <div class="mb-3">
                 <label for="location" class="form-label">Location</label>
-                <input type="text" name="location" id="location" class="form-control">
+                <input type="text" name="location" id="location" class="form-control" value="<?= htmlspecialchars($tour['location']) ?>">
                 <small class="form-text text-muted">Specify the destination or meeting point of the tour.</small>
             </div>
 
@@ -196,22 +221,22 @@ ob_start();
             <div class="row">
                 <div class="col-md-3 mb-3">
                     <label for="start_date" class="form-label">Start Date *</label>
-                    <input type="date" name="start_date" id="start_date" class="form-control" required>
+                    <input type="date" name="start_date" id="start_date" class="form-control" value="<?= htmlspecialchars($tour['start_date']) ?>" required>
                     <small class="form-text text-muted">Select the date when the tour begins.</small>
                 </div>
                 <div class="col-md-3 mb-3">
                     <label for="start_time" class="form-label">Start Time *</label>
-                    <input type="time" name="start_time" id="start_time" class="form-control" required>
+                    <input type="time" name="start_time" id="start_time" class="form-control" value="<?= htmlspecialchars($tour['start_time']) ?>" required>
                     <small class="form-text text-muted">Specify the time when the tour begins.</small>
                 </div>
                 <div class="col-md-3 mb-3">
                     <label for="end_date" class="form-label">End Date *</label>
-                    <input type="date" name="end_date" id="end_date" class="form-control" required>
+                    <input type="date" name="end_date" id="end_date" class="form-control" value="<?= htmlspecialchars($tour['end_date']) ?>" required>
                     <small class="form-text text-muted">Select the date when the tour ends.</small>
                 </div>
                 <div class="col-md-3 mb-3">
                     <label for="end_time" class="form-label">End Time *</label>
-                    <input type="time" name="end_time" id="end_time" class="form-control" required>
+                    <input type="time" name="end_time" id="end_time" class="form-control" value="<?= htmlspecialchars($tour['end_time']) ?>" required>
                     <small class="form-text text-muted">Specify the time when the tour ends.</small>
                 </div>
             </div>
@@ -246,10 +271,10 @@ ob_start();
             <div class="mb-3">
                 <label for="status" class="form-label">Status</label>
                 <select name="status" id="status" class="form-select">
-                    <option value="upcoming">Upcoming</option>
-                    <option value="ongoing">Ongoing</option>
-                    <option value="completed">Completed</option>
-                    <option value="canceled">Canceled</option>
+                    <option value="upcoming" <?= $tour['status']=='upcoming'?'selected':'' ?>>Upcoming</option>
+                    <option value="ongoing" <?= $tour['status']=='ongoing'?'selected':'' ?>>Ongoing</option>
+                    <option value="completed" <?= $tour['status']=='completed'?'selected':'' ?>>Completed</option>
+                    <option value="canceled" <?= $tour['status']=='canceled'?'selected':'' ?>>Canceled</option>
                 </select>
                 <small class="form-text text-muted">Set the current status of the tour.</small>
             </div>

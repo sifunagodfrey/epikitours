@@ -9,6 +9,38 @@ $pageTitle = "Manage Tours";
 $metaDescription = "View and manage all tours in the EpikiTours admin panel.";
 
 // -------------------
+// Handle Delete Request
+// -------------------
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['delete_tour_id'])) {
+    $tourToDelete = intval($_POST['delete_tour_id']);
+
+    try {
+        $stmt = $pdo->prepare("DELETE FROM epi_tours WHERE id = :id");
+        $stmt->execute([':id' => $tourToDelete]);
+
+        if ($stmt->rowCount() > 0) {
+            $_SESSION['flash_success'] = "Tour deleted successfully.";
+        } else {
+            $_SESSION['flash_error'] = "Tour not found or could not be deleted.";
+        }
+    } catch (PDOException $e) {
+        $_SESSION['flash_error'] = "Error: " . $e->getMessage();
+    }
+
+    // Redirect to avoid resubmission
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit;
+}
+
+// -------------------
+// Flash Messages
+// -------------------
+$deleteSuccess = $_SESSION['flash_success'] ?? "";
+$deleteError   = $_SESSION['flash_error'] ?? "";
+
+unset($_SESSION['flash_success'], $_SESSION['flash_error']);
+
+// -------------------
 // Fetch Tours
 // -------------------
 try {
@@ -40,6 +72,13 @@ ob_start();
         <i class="fas fa-plus me-1"></i> Add New Tour
     </a>
 </div>
+
+<!-- Delete Alerts -->
+<?php if ($deleteSuccess): ?>
+  <div class="alert alert-success"><?= $deleteSuccess ?></div>
+<?php elseif ($deleteError): ?>
+  <div class="alert alert-danger"><?= $deleteError ?></div>
+<?php endif; ?>
 
 <!-- Tours Table -->
 <div class="card shadow-sm border-0">
@@ -85,11 +124,14 @@ ob_start();
                                         class="btn btn-sm btn-warning">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <a href="<?= BASE_URL ?>tours/delete-tour.php?id=<?= $tour['id'] ?>"
-                                        class="btn btn-sm btn-danger"
-                                        onclick="return confirm('Are you sure you want to delete this tour?');">
+                                    <button type="button" 
+                                            class="btn btn-sm btn-danger"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#deleteModal"
+                                            data-tour-id="<?= $tour['id'] ?>"
+                                            data-tour-title="<?= htmlspecialchars($tour['title']) ?>">
                                         <i class="fas fa-trash"></i>
-                                    </a>
+                                    </button>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -103,6 +145,43 @@ ob_start();
         </div>
     </div>
 </div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <form method="POST">
+        <div class="modal-header">
+          <h5 class="modal-title text-danger" id="deleteModalLabel">Confirm Deletion</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to delete the tour <strong id="deleteTourTitle"></strong>?
+        </div>
+        <div class="modal-footer">
+          <input type="hidden" name="delete_tour_id" id="deleteTourId">
+          <button type="submit" class="btn btn-danger">Delete</button>
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- JS to bind modal -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const deleteModal = document.getElementById('deleteModal');
+  deleteModal.addEventListener('show.bs.modal', event => {
+    const button = event.relatedTarget;
+    const tourId = button.getAttribute('data-tour-id');
+    const tourTitle = button.getAttribute('data-tour-title');
+
+    deleteModal.querySelector('#deleteTourId').value = tourId;
+    deleteModal.querySelector('#deleteTourTitle').textContent = tourTitle;
+  });
+});
+</script>
 
 <?php
 $pageContent = ob_get_clean();

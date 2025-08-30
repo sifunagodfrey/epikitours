@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 29, 2025 at 04:27 PM
+-- Generation Time: Aug 30, 2025 at 12:17 PM
 -- Server version: 8.0.37
 -- PHP Version: 8.2.12
 
@@ -77,7 +77,8 @@ INSERT INTO `epi_activity_logs` (`id`, `user_id`, `action`, `ip_address`, `creat
 (35, NULL, 'Admin Created User', '::1', '2025-08-28 14:27:41'),
 (36, NULL, 'Admin Created User', '::1', '2025-08-28 14:32:54'),
 (37, NULL, 'Admin Created User', '::1', '2025-08-28 14:36:19'),
-(38, NULL, 'Admin Created User', '::1', '2025-08-28 14:50:10');
+(38, NULL, 'Admin Created User', '::1', '2025-08-28 14:50:10'),
+(39, 24, 'Admin Created User', '::1', '2025-08-30 10:03:23');
 
 -- --------------------------------------------------------
 
@@ -87,12 +88,21 @@ INSERT INTO `epi_activity_logs` (`id`, `user_id`, `action`, `ip_address`, `creat
 
 CREATE TABLE `epi_bookings` (
   `id` bigint NOT NULL,
-  `user_id` bigint NOT NULL,
+  `customer_id` bigint NOT NULL,
   `tour_id` bigint NOT NULL,
   `booking_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `tour_guide` bigint NOT NULL,
+  `total_amount` decimal(10,2) NOT NULL DEFAULT '0.00',
   `status` enum('pending','confirmed','canceled') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'pending',
   `confirmation_code` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `epi_bookings`
+--
+
+INSERT INTO `epi_bookings` (`id`, `customer_id`, `tour_id`, `booking_date`, `tour_guide`, `total_amount`, `status`, `confirmation_code`) VALUES
+(2, 2, 4, '2025-08-30 21:00:00', 24, 80000.00, 'confirmed', NULL);
 
 -- --------------------------------------------------------
 
@@ -231,6 +241,8 @@ CREATE TABLE `epi_tours` (
   `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `start_date` date NOT NULL,
   `end_date` date NOT NULL,
+  `start_time` time NOT NULL,
+  `end_time` time NOT NULL,
   `location` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `youtube_link` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `marzipano_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -239,9 +251,17 @@ CREATE TABLE `epi_tours` (
   `agent_id` bigint DEFAULT NULL,
   `status` enum('upcoming','ongoing','completed','canceled') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'upcoming',
   `created_by` bigint NOT NULL,
+  `updated_by` bigint DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `epi_tours`
+--
+
+INSERT INTO `epi_tours` (`id`, `title`, `slug`, `description`, `start_date`, `end_date`, `start_time`, `end_time`, `location`, `youtube_link`, `marzipano_path`, `jitsi_link`, `preview_thumbnail`, `agent_id`, `status`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES
+(4, 'Test Tour', 'test-tour', 'Tour created for testing CRUD actions.\r\nCreate works.\r\nUpdate works.\r\nDelete to confirm.', '2025-08-30', '2025-09-04', '11:24:00', '11:24:00', 'Ongata-Rongai', '', '', '', NULL, NULL, 'ongoing', 5, 5, '2025-08-30 08:24:58', '2025-08-30 08:25:32');
 
 -- --------------------------------------------------------
 
@@ -319,7 +339,8 @@ CREATE TABLE `epi_users` (
 INSERT INTO `epi_users` (`id`, `first_name`, `last_name`, `email`, `password`, `phone`, `user_role`, `profile_picture`, `email_verified`, `verification_token`, `status`, `password_reset_token`, `password_reset_expires`, `last_login`, `created_at`, `updated_at`) VALUES
 (2, 'Alice', 'Wanjiku', 'guide@example.com', '*EF53AC6FDCE36A16350904509C4D00B826AB5D99', '254700111222', 'visitor', NULL, 1, NULL, 'active', NULL, NULL, NULL, '2025-08-25 09:46:10', '2025-08-28 08:32:48'),
 (4, 'Godfrey', 'Sifuna', 'sifuna.godfreyw@gmail.com', '$2y$10$BF.L6FaUqd5DorBqsgnf1euWcoAHqlduFn55OEjKm1Ff0YqojhvBa', '0706006230', 'admin', NULL, 0, NULL, 'active', NULL, NULL, '2025-08-27 06:56:51', '2025-08-25 09:49:23', '2025-08-28 08:32:48'),
-(5, 'Dana', 'Katisya', 'danakatisya@gmail.com', '$2y$10$pbZc2IBwKUog3iSS9ko.lu7/HyrjIy1BwJLUWc388.Wq3TYDrGdR6', '0758926969', 'admin', NULL, 0, NULL, 'active', NULL, NULL, '2025-08-28 05:58:11', '2025-08-28 05:56:34', '2025-08-28 12:39:34');
+(5, 'Dana', 'Katisya', 'danakatisya@gmail.com', '$2y$10$pbZc2IBwKUog3iSS9ko.lu7/HyrjIy1BwJLUWc388.Wq3TYDrGdR6', '0758926969', 'admin', NULL, 0, NULL, 'active', NULL, NULL, '2025-08-28 05:58:11', '2025-08-28 05:56:34', '2025-08-28 12:39:34'),
+(24, 'Test', 'Guide', 'daa@gmail.com', '$2y$10$QrpnPRUb070yIVgOS3Owp.Ii5OM9h1rG8yFNpQZ/MxEiTo0/tieR6', '0758926969', 'guide', NULL, 0, NULL, 'active', NULL, NULL, NULL, '2025-08-30 10:03:23', '2025-08-30 10:03:23');
 
 -- --------------------------------------------------------
 
@@ -351,8 +372,9 @@ ALTER TABLE `epi_activity_logs`
 ALTER TABLE `epi_bookings`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `confirmation_code` (`confirmation_code`),
-  ADD KEY `user_id` (`user_id`),
-  ADD KEY `tour_id` (`tour_id`);
+  ADD KEY `user_id` (`customer_id`),
+  ADD KEY `tour_id` (`tour_id`),
+  ADD KEY `fk_bookings_guide` (`tour_guide`);
 
 --
 -- Indexes for table `epi_notifications`
@@ -402,7 +424,8 @@ ALTER TABLE `epi_sessions`
 ALTER TABLE `epi_tours`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `slug_unique` (`slug`),
-  ADD KEY `created_by` (`created_by`);
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `fk_updated_by` (`updated_by`);
 
 --
 -- Indexes for table `epi_tour_agents`
@@ -446,13 +469,13 @@ ALTER TABLE `isk_system_logs`
 -- AUTO_INCREMENT for table `epi_activity_logs`
 --
 ALTER TABLE `epi_activity_logs`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT for table `epi_bookings`
 --
 ALTER TABLE `epi_bookings`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `epi_notifications`
@@ -488,7 +511,7 @@ ALTER TABLE `epi_sessions`
 -- AUTO_INCREMENT for table `epi_tours`
 --
 ALTER TABLE `epi_tours`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `epi_tour_agents`
@@ -512,7 +535,7 @@ ALTER TABLE `epi_tour_media`
 -- AUTO_INCREMENT for table `epi_users`
 --
 ALTER TABLE `epi_users`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `isk_system_logs`
@@ -534,8 +557,10 @@ ALTER TABLE `epi_activity_logs`
 -- Constraints for table `epi_bookings`
 --
 ALTER TABLE `epi_bookings`
-  ADD CONSTRAINT `epi_bookings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `epi_users` (`id`),
-  ADD CONSTRAINT `epi_bookings_ibfk_2` FOREIGN KEY (`tour_id`) REFERENCES `epi_tours` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `epi_bookings_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `epi_users` (`id`),
+  ADD CONSTRAINT `epi_bookings_ibfk_2` FOREIGN KEY (`tour_id`) REFERENCES `epi_tours` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_bookings_customer` FOREIGN KEY (`customer_id`) REFERENCES `epi_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_bookings_guide` FOREIGN KEY (`tour_guide`) REFERENCES `epi_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `epi_notifications`
@@ -561,7 +586,8 @@ ALTER TABLE `epi_sessions`
 -- Constraints for table `epi_tours`
 --
 ALTER TABLE `epi_tours`
-  ADD CONSTRAINT `epi_tours_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `epi_users` (`id`);
+  ADD CONSTRAINT `epi_tours_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `epi_users` (`id`),
+  ADD CONSTRAINT `fk_updated_by` FOREIGN KEY (`updated_by`) REFERENCES `epi_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `epi_tour_agents`
